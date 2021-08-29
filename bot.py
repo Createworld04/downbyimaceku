@@ -419,7 +419,7 @@ def download_video(message, video):
             ytf = 18
     elif ("deshdeepak" in link and len(link.split("/")[-1]) == 13):
         vid_id = link[-13:]
-        link = f"https://scorpionsplayer.herokuapp.com/{vid_id}"
+        link = f"http://scorpionsplayer.herokuapp.com/{vid_id}"
         if vid_format not in ["144", "240", "360", "480", "720"]:
             vid_format = "360"
         ytf = f"'bestvideo[height<={vid_format}]+bestaudio'"
