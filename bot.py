@@ -392,18 +392,33 @@ def download_video(message, video):
     topic = video[3]
     quote = video[4]
 
-    if "thegreatace" in link and ("brightcove" in link or len(link.split("/")[-1]) == 13):
+    if "magnetoscript" in link and ("brightcove" in link or len(link.split("/")[-1]) == 13):
         vid_id = link[-13:]
-        link = f"https://thegreatace.herokuapp.com/{vid_id}"
-    elif "thegreatace" in link and "jwp" in link:
+        link = f"http:player.deshdeepak.me{vid_id}"
+    elif "magnetoscript" in link and "jwp" in link:
         vid_id = link[-8:]
         link = f"https://thegreatace.herokuapp.com/{vid_id}"
+    elif "thegreatace" in link and (len(link.split("/")[-1])==11):
+        vid_id = link[-11:]
+        link = f"http://youtu.be/{vid_id}"
     elif "jwplayer" in link and link.endswith('.m3u8'):
         vid_id = link.removesuffix(".m3u8").split("/")[-1]
-        link = f"https://thegreatace.herokuapp.com/{vid_id}"
+        link = f"https://magnetoscript.gq/jwp{vid_id}"
+        
+        reply_markup = pyrogram.inlinekeyboardmarkup(inline_keyboard)
+        #LOGGER.info(reply_markup)
+        if cf_name:
+            succss_mesg = f"""Select the desired format | {cf_name}"""
+        else:
+            succss_mesg = f"""Select the desired format"""
+            LOGGER.info(succss_mesg)
+            return thumb_image, succss_mesg, reply_markup
     elif "jwplayer" in link and link.endswith('.mp4'):
         vid_id = link.removesuffix('.mp4').split('/')[-1].split('-')[0]
-        link = f"https://thegreatace.herokuapp.com/{vid_id}"
+        link = f"https://magnetoscript.gq/jwp{vid_id}"
+    elif "support.careerwill" in link and (len(link.split("/")[-1]) == 13):
+        vid_id = link[-13:]
+        link = f"http:player.deshdeepak.me{vid_id}"    
 
     if not vid_format.isnumeric():
         title = vid_format
@@ -417,13 +432,13 @@ def download_video(message, video):
             ytf = 22
         else:
             ytf = 18
-    elif ("thegreatace" in link and len(link.split("/")[-1]) == 13):
+    elif ("deshdeepak" in link and len(link.split("/")[-1]) == 13):
         vid_id = link[-13:]
         link = f"https://thegreatace.herokuapp.com/{vid_id}"
         if vid_format not in ["144", "240", "360", "480", "720"]:
             vid_format = "360"
         ytf = f"'bestvideo[height<={vid_format}]+bestaudio'"
-    elif ("thegreatace" in link and len(link.split("/")[-1]) == 8):
+    elif ("deshdeepak" in link and len(link.split("/")[-1]) == 8):
         if vid_format == "144":
             vid_format = "180"
         elif vid_format == "240":
@@ -437,6 +452,25 @@ def download_video(message, video):
         else:
             vid_format = "360"
         ytf = f"'best[height<={vid_format}]'"
+    elif ("thegreatace" in link and len(link.split("/")[-1]) == 13):
+        vid_id = link[-13:]
+        if vid_format not in ["144", "240", "360", "480", "720"]:
+            vid_format = "360"
+        ytf = f"'bestvideo[height<={vid_format}]+bestaudio'"
+    elif ("thegreatace" in link and len(link.split("/")[-1]) == 8):    
+        if vid_format == "144":
+            vid_format = "180"
+        elif vid_format == "240":
+            vid_format = "270"
+        elif vid_format == "360":
+            vid_format = "360"
+        elif vid_format == "480":
+            vid_format = "540"
+        elif vid_format == "720":
+            vid_format = "720"
+        else:
+            vid_format = "360"
+        ytf = f"'best[height<={vid_format}]'"    
     elif is_vimeo(link):
         if vid_format == "144":
             ytf= "'http-240p'"
